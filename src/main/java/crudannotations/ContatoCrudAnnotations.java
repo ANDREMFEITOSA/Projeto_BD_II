@@ -67,7 +67,9 @@ public class ContatoCrudAnnotations {
 		SecureRandom random = new SecureRandom();
 		
 		for(i = 0; i < j; i++) {
+			
 			Contato contato = new Contato();
+			
 			contato.setNome(nomes.get(random.nextInt(nomes.size())));
 			contato.setTelefone(telefones.get(random.nextInt(telefones.size())));
 			contato.setEmail(emails.get(random.nextInt(emails.size())));
