@@ -42,6 +42,7 @@ public class ContatoCrudAnnotations {
 		nomes.add("Carlos");
 		nomes.add("Debora");
 		nomes.add("Elias");
+		nomes.add("Fábio");
 		
 		List<String> telefones = new ArrayList<String>();
 		telefones.add("99999-1111");
