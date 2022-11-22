@@ -18,62 +18,73 @@ import java.util.concurrent.ExecutorService;
 public class ConcorrenciaDeTransacoes {
 
 	public static void main(String[] args) {
-		
-		List<String> nomes = new ArrayList<String>();
-		nomes.add("Andre");
-		nomes.add("Beatriz");
-		nomes.add("Carlos");
-		nomes.add("Debora");
-		nomes.add("Elias");
-		nomes.add("Fábio");
-		
-		List<String> telefones = new ArrayList<String>();
-		telefones.add("99999-1111");
-		telefones.add("99999-2222");
-		telefones.add("99999-3333");
-		telefones.add("99999-4444");
-		telefones.add("99999-5555");
-
-		List<String> emails = new ArrayList<String>();
-		emails.add("aaa@xxx.br");
-		emails.add("bbb@xxx.br");
-		emails.add("ccc@xxx.br");
-		emails.add("ddd@xxx.br");
-		emails.add("eee@xxx.br");
-		
-		List<String> obs = new ArrayList<String>();
-		obs.add("obs1");
-		obs.add("obs2");
-		obs.add("obs3");
-		obs.add("obs4");
-		obs.add("obs5");
-		
-		Session sessao = HibernateUtil.getSessionFactory().openSession(); 
-		Transaction transacao = sessao.beginTransaction(); 
-		ContatoCrudAnnotations contatoCrud = new ContatoCrudAnnotations(sessao);
-		
-		SecureRandom random = new SecureRandom();
-		
-		Contato contatoE = new Contato();
-		
-		contatoE.setNome("nome_teste_escrita");
-		contatoE.setTelefone("telefone_teste_escrita");
-		contatoE.setEmail("email_teste_escrita");
-		contatoE.setDataCadastro(new Date(System.currentTimeMillis()));
-		contatoE.setObservacao("obs_teste_escrita");
-		contatoE.setCodigo(random.nextInt(100));
-		
-		TransacaoEscrita te = new TransacaoEscrita(contatoE, contatoCrud);
-		
-		TransacaoConsulta tc = new TransacaoConsulta(contatoCrud, random.nextInt(100));
-		
+				
 		ExecutorService executorService = Executors.newCachedThreadPool();
+			
+			executorService.execute(new Runnable() {
+				public void run() {
+					
+					SecureRandom random = new SecureRandom();
+					
+					Contato contato = new Contato();
+					
+					//Contato contato = (Contato)Session.get(Contato.class, codigo, LockOptions.UPGRADE);
+					
+					Session sessao = HibernateUtil.getSessionFactory().openSession();
+					
+					ContatoCrudAnnotations contatoCrud = new ContatoCrudAnnotations(sessao);
+					
+					for(int i = 0; i < 5; i++) {
+					
+						contato = contatoCrud.buscaContato(random.nextInt(100));
+						
+						Transaction transacao1 = sessao.beginTransaction(); 
+					
+						System.out.println("Contato:" + contato.getCodigo() + "-" + contato.getNome() + "-" + contato.getTelefone() + "-" + contato.getEmail() + "-" + contato.getDataCadastro() + "-" + contato.getObservacao());
+					
+						contato.setNome("t1_nome_teste_escrita");
+						contato.setTelefone("t1_telefone_teste_escrita");
+						contato.setEmail("t1_email_teste_escrita");
+						contato.setDataCadastro(new Date(System.currentTimeMillis()));
+						contato.setObservacao("t1_obs_teste_escrita");
+						//contato.setCodigo(random.nextInt(100));
+					
+						contatoCrud.atualizar(contato);
+					
+						System.out.println("Contato:" + contato.getCodigo() + "-" + contato.getNome() + "-" + contato.getTelefone() + "-" + contato.getEmail() + "-" + contato.getDataCadastro() + "-" + contato.getObservacao());
+					
+						transacao1.commit();
+					
+						Transaction transacao2 = sessao.beginTransaction();
+					
+						contato.setNome("t2_nome_teste_escrita");
+						contato.setTelefone("t2_telefone_teste_escrita");
+						contato.setEmail("t2_email_teste_escrita");
+						contato.setDataCadastro(new Date(System.currentTimeMillis()));
+						contato.setObservacao("t2_obs_teste_escrita");
+						//contato.setCodigo(random.nextInt(100));
+					
+						contatoCrud.atualizar(contato);
+					
+						System.out.println("Contato:" + contato.getCodigo() + "-" + contato.getNome() + "-" + contato.getTelefone() + "-" + contato.getEmail() + "-" + contato.getDataCadastro() + "-" + contato.getObservacao());
+					
+						transacao2.commit();
+					}
+				}
+			});
+			
+		//}
 		
-		executorService.execute(te);
+		/*TransacaoEscrita te = new TransacaoEscrita(contatoE, contatoCrud);
+			
+		TransacaoConsulta tc = new TransacaoConsulta(contatoCrud, random.nextInt(100));*/
+
 		
-		executorService.execute(tc);
+		//executorService.execute(te);
 		
-		transacao.commit();
+		//executorService.execute(tc);
+		
+		//transacao.commit();
 
 		/*int i;
 		int j = 50;

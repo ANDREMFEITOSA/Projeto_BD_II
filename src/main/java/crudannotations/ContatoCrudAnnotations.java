@@ -6,10 +6,17 @@ import java.util.List;
 import org.hibernate.*;
 import conexao.HibernateUtil;
 public class ContatoCrudAnnotations {
+	
 	private Session sessao;
+	
 	public ContatoCrudAnnotations(Session sessao) {
 		this.sessao = sessao;
 	}
+	
+	public Session getSessao() {
+		return sessao;
+	}
+	
 	public void salvar(Contato contato) {
 		sessao.save(contato); 
 	}
