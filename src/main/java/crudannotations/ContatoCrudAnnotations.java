@@ -31,7 +31,9 @@ public class ContatoCrudAnnotations {
 		return consulta.list();
 	}
 	public Contato buscaContato(int valor) {
-		Query consulta = sessao.createQuery("from Contato where codigo = :parametro"); 
+		Query consulta = sessao.createQuery("from Contato where codigo = :parametro");
+		consulta.setLockMode("PESSIMISTIC_WRITE", LockMode.PESSIMISTIC_WRITE); //lock exclusivo, bloqueia a leitura
+		//consulta.setLockMode("PESSIMISTIC_WRITE", LockMode.PESSIMISTIC_READ); //lock compartilhado, bloqueia o dado de ser alterado ou deletado
 		consulta.setInteger("parametro", valor); 
 		return (Contato) consulta.uniqueResult(); 
 	}
