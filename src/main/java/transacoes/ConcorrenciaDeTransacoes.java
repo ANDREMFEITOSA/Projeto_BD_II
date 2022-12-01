@@ -21,6 +21,8 @@ public class ConcorrenciaDeTransacoes {
 		
 		final ArrayList<Long> tempo = new ArrayList<Long>();
 		
+		final ArrayList<Long> tempo2 = new ArrayList<Long>();
+		
 		int numThreads = Runtime.getRuntime().availableProcessors();
 		
 		ExecutorService executorService = Executors.newCachedThreadPool();
@@ -28,10 +30,8 @@ public class ConcorrenciaDeTransacoes {
 		for(int i = 0; i < numThreads; i++) {
 			
 			//executorService.execute(new Runnable() {
-			executorService.execute(new Transacao(tempo) {
+			executorService.execute(new Transacao() {
 				public void run() {
-					
-						long inicio = System.nanoTime();
 						
 						SecureRandom random = new SecureRandom();
 						
@@ -41,13 +41,15 @@ public class ConcorrenciaDeTransacoes {
 												
 						ContatoCrudAnnotations contatoCrud = new ContatoCrudAnnotations(sessao);
 						
-						for(int j = 0; j < 25; j++) {
+						long inicio = System.nanoTime();
+						
+						for(int j = 0; j < 5; j++) {
 							
 							Transaction transacao = sessao.beginTransaction();
 							
 							contato = contatoCrud.buscaContato(random.nextInt(100)); //operação de consulta
 							
-							System.out.println("Transacao " + j + " - Consulta" + " - Contato:" + contato.getCodigo() + " : " + contato.getNome() + " : " + contato.getTelefone() + " : " + contato.getEmail() + " : " + contato.getDataCadastro() + " : " + contato.getObservacao());
+							System.out.println("Transacao - Consulta - " + contato.getCodigo() + " : " + contato.getNome() + " : " + contato.getTelefone() + " : " + contato.getEmail() + " : " + contato.getDataCadastro() + " : " + contato.getObservacao());
 							
 							contato.setNome("nome_teste");
 							contato.setTelefone("telefone_teste");
@@ -62,9 +64,13 @@ public class ConcorrenciaDeTransacoes {
 						
 						long fim = System.nanoTime();
 						
-						tempo.add(fim - inicio);
+						Transacao.incrementTempo(fim - inicio);
 					}
 				});
 			}
+		
+		for(int k = 0; k < tempo.size(); k++) {
+			System.out.println("Tempo: " + tempo.get(k) + "ms");
+		}
 	}
 }

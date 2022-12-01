@@ -5,10 +5,16 @@ import java.util.List;
 
 public class Transacao implements Runnable {
 	
-	private ArrayList<Long> tempo = new ArrayList<Long>();
+	private static ArrayList<Long> tempo = new ArrayList<Long>();
 	
-	public Transacao(ArrayList<Long> tempo) {
+	private static long tempoTransacao;
+	
+	/*public Transacao(ArrayList<Long> tempo) {
 		this.tempo = tempo;
+	}*/
+	
+	public Transacao() {
+		
 	}
 
 	public void run() {
@@ -16,13 +22,26 @@ public class Transacao implements Runnable {
 
 	}
 
-	public ArrayList<Long> getTempo() {
+	public static ArrayList<Long> getTempo() {
 		return tempo;
 	}
 
 	public void setTempo(ArrayList<Long> tempo) {
 		this.tempo = tempo;
 	}
+	
+	public static void incrementTempo(long a) {
+		tempo.add(a);
+	}
+
+	public static long getTempoTransacao() {
+		return tempoTransacao;
+	}
+
+	public static void setTempoTransacao(long tempoTransacao) {
+		Transacao.tempoTransacao = tempoTransacao;
+	}
+	
 	
 	
 

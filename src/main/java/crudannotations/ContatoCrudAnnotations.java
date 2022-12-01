@@ -1,10 +1,6 @@
 package crudannotations;
-import java.util.ArrayList;
-import java.security.SecureRandom;
-import java.sql.Date;
 import java.util.List;
 import org.hibernate.*;
-import conexao.HibernateUtil;
 public class ContatoCrudAnnotations {
 	
 	private Session sessao;
