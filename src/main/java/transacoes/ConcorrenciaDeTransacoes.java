@@ -19,9 +19,7 @@ public class ConcorrenciaDeTransacoes {
 	
 	public static void main(String[] args) {
 		
-		final ArrayList<Long> tempo = new ArrayList<Long>();
-		
-		final ArrayList<Long> tempo2 = new ArrayList<Long>();
+		//final ArrayList<Long> tempo = new ArrayList<Long>();
 		
 		int numThreads = Runtime.getRuntime().availableProcessors();
 		
@@ -29,8 +27,8 @@ public class ConcorrenciaDeTransacoes {
 		
 		for(int i = 0; i < numThreads; i++) {
 			
-			//executorService.execute(new Runnable() {
-			executorService.execute(new Transacao() {
+			executorService.execute(new Runnable() {
+			//executorService.execute(new Transacao() {
 				public void run() {
 						
 						SecureRandom random = new SecureRandom();
@@ -41,15 +39,15 @@ public class ConcorrenciaDeTransacoes {
 												
 						ContatoCrudAnnotations contatoCrud = new ContatoCrudAnnotations(sessao);
 						
-						long inicio = System.nanoTime();
-						
-						for(int j = 0; j < 5; j++) {
+						for(int j = 0; j < 100; j++) {
+							
+							long inicio = System.nanoTime();
 							
 							Transaction transacao = sessao.beginTransaction();
 							
 							contato = contatoCrud.buscaContato(random.nextInt(100)); //operação de consulta
 							
-							System.out.println("Transacao - Consulta - " + contato.getCodigo() + " : " + contato.getNome() + " : " + contato.getTelefone() + " : " + contato.getEmail() + " : " + contato.getDataCadastro() + " : " + contato.getObservacao());
+							//System.out.println("Transacao - Consulta - " + contato.getCodigo() + " : " + contato.getNome() + " : " + contato.getTelefone() + " : " + contato.getEmail() + " : " + contato.getDataCadastro() + " : " + contato.getObservacao());
 							
 							contato.setNome("nome_teste");
 							contato.setTelefone("telefone_teste");
@@ -60,17 +58,13 @@ public class ConcorrenciaDeTransacoes {
 							contatoCrud.atualizar(contato); //operação de escrita
 							
 							transacao.commit();
+							
+							long fim = System.nanoTime();
+							
+							System.out.println("Tempo de Transacao: " + (fim - inicio)/1000000 + "ms");
 						}
-						
-						long fim = System.nanoTime();
-						
-						Transacao.incrementTempo(fim - inicio);
 					}
 				});
 			}
-		
-		for(int k = 0; k < tempo.size(); k++) {
-			System.out.println("Tempo: " + tempo.get(k) + "ms");
-		}
 	}
 }
