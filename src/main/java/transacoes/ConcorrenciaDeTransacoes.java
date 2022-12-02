@@ -39,13 +39,13 @@ public class ConcorrenciaDeTransacoes {
 												
 						ContatoCrudAnnotations contatoCrud = new ContatoCrudAnnotations(sessao);
 						
-						for(int j = 0; j < 100; j++) {
+						for(int j = 0; j < 50; j++) {
 							
 							long inicio = System.nanoTime();
 							
 							Transaction transacao = sessao.beginTransaction();
 							
-							contato = contatoCrud.buscaContato(random.nextInt(100)); //operação de consulta
+							contato = contatoCrud.buscaContato(random.nextInt(100)+1); //operação de consulta
 							
 							//System.out.println("Transacao - Consulta - " + contato.getCodigo() + " : " + contato.getNome() + " : " + contato.getTelefone() + " : " + contato.getEmail() + " : " + contato.getDataCadastro() + " : " + contato.getObservacao());
 							

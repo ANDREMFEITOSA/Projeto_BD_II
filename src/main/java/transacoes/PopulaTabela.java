@@ -71,8 +71,11 @@ public class PopulaTabela {
 		}
 		
 		transacao.commit();
+		
 		 
-		System.out.println("Total de registros cadastrados: " + contatoCrud.listar().size()); 
+		System.out.println("Total de registros cadastrados: " + contatoCrud.listar().size());
+		
+		sessao.close();
 	}
 }
 
